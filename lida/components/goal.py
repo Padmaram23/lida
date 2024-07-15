@@ -1,19 +1,20 @@
 import json
 import logging
-from lida.utils import clean_code_snippet
+from ..utils import clean_code_snippet
 from llmx import TextGenerator
-from lida.datamodel import Goal, TextGenerationConfig, Persona
+from ..datamodel import Goal, TextGenerationConfig, Persona
 
 
 SYSTEM_INSTRUCTIONS = """
-You are a an experienced data analyst who can generate a given number of insightful GOALS about data, when given a summary of the data, and a specified persona. The VISUALIZATIONS YOU RECOMMEND MUST FOLLOW VISUALIZATION BEST PRACTICES (e.g., must use bar charts instead of pie charts for comparing quantities) AND BE MEANINGFUL (e.g., plot longitude and latitude on maps where appropriate). They must also be relevant to the specified persona. Each goal must include a question, a visualization (THE VISUALIZATION MUST REFERENCE THE EXACT COLUMN FIELDS FROM THE SUMMARY), and a rationale (JUSTIFICATION FOR WHICH dataset FIELDS ARE USED and what we will learn from the visualization). Each goal MUST mention the exact fields from the dataset summary above
+You are a an experienced data analyst who can generate a given number of insightful GOALS about data, when given a summary of the data, and a specified persona. The VISUALIZATIONS YOU RECOMMEND MUST FOLLOW VISUALIZATION BEST PRACTICES (visualization field should be a string, a summary of the graph)(e.g., must use bar charts instead of pie charts for comparing quantities) AND BE MEANINGFUL (e.g., plot longitude and latitude on maps where appropriate). They must also be relevant to the specified persona. Each goal must include a question, a visualization (THE VISUALIZATION MUST REFERENCE THE EXACT COLUMN FIELDS FROM THE SUMMARY), and a rationale (JUSTIFICATION FOR WHICH dataset FIELDS ARE USED and what we will learn from the visualization). Each goal MUST mention the exact fields from the dataset summary above
 """
 
 FORMAT_INSTRUCTIONS = """
 THE OUTPUT MUST BE A CODE SNIPPET OF A VALID LIST OF JSON OBJECTS. IT MUST USE THE FOLLOWING FORMAT:
 
 ```[
-    { "index": 0,  "question": "What is the distribution of X", "visualization": "histogram of X", "rationale": "This tells about "} ..
+    { "index": 0,  "question": "What is the distribution of X", "visualization": "histogram of X (must be a string like a summary)", "rationale": "This tells about ", "plot": { "Type": "Type of graph that you are suggesting", "X-axis": "X-axis field name STRICTLY USE THE COLUMN NAME FROM THE DATASET WITH SAME GRAMMER", "Y-axis": "Y-axis field name STRICTLY USE THE COLUMN NAME FROM THE DATASET WITH SAME GRAMMER",}
+} ..
     ]
 ```
 THE OUTPUT SHOULD ONLY USE THE JSON FORMAT ABOVE.
@@ -41,7 +42,6 @@ class GoalExplorer():
                 rationale="")
 
         user_prompt += f"""\n The generated goals SHOULD BE FOCUSED ON THE INTERESTS AND PERSPECTIVE of a '{persona.persona} persona, who is insterested in complex, insightful goals about the data. \n"""
-
         messages = [
             {"role": "system", "content": SYSTEM_INSTRUCTIONS},
             {"role": "assistant",

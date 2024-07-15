@@ -2,8 +2,8 @@ import json
 import logging
 from typing import Union
 import pandas as pd
-from lida.utils import clean_code_snippet, read_dataframe
-from lida.datamodel import TextGenerationConfig
+from ..utils import clean_code_snippet, read_dataframe
+from ..datamodel import TextGenerationConfig
 from llmx import TextGenerator
 import warnings
 

@@ -38,6 +38,7 @@ class Goal:
     visualization: str
     rationale: str
     index: Optional[int] = 0
+    plot: Dict[str, Any] = field(default_factory=dict)
 
     def _repr_markdown_(self):
         return f"""
@@ -48,6 +49,7 @@ class Goal:
 **Visualization:** `{self.visualization}`
 
 **Rationale:** {self.rationale}
+**plot:** {self.plot}
 """
 
 

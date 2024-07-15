@@ -1,6 +1,6 @@
 
 import json
-from lida.utils import clean_code_snippet
+from ...utils import clean_code_snippet
 from llmx import TextGenerator, TextGenerationConfig, TextGenerationResponse
 from ..scaffold import ChartScaffold
 

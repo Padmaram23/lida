@@ -11,15 +11,15 @@ import logging
 
 import pandas as pd
 from llmx import llm, TextGenerator
-from lida.datamodel import Goal, Summary, TextGenerationConfig, Persona
-from lida.utils import read_dataframe
+from ..datamodel import Goal, Summary, TextGenerationConfig, Persona
+from ..utils import read_dataframe
 from ..components.summarizer import Summarizer
 from ..components.goal import GoalExplorer
 from ..components.persona import PersonaExplorer
 from ..components.executor import ChartExecutor
 from ..components.viz import VizGenerator, VizEditor, VizExplainer, VizEvaluator, VizRepairer, VizRecommender
 
-import lida.web as lida
+from lida.lida import web as lida
 
 
 logger = logging.getLogger("lida")
@@ -428,3 +428,20 @@ class Manager(object):
             self.infographer = Infographer()
         return self.infographer.generate(
             visualization=visualization, n=n, style_prompt=style_prompt, return_pil=return_pil)
+    
+    def get_plots(
+        self,
+        summary,
+        goal,
+        textgen_config: TextGenerationConfig = TextGenerationConfig(),
+        return_error: bool = False,
+    ):
+        if isinstance(goal, dict):
+            goal = Goal(**goal)
+        if isinstance(goal, str):
+            goal = Goal(question=goal, visualization=goal, rationale="")
+
+        self.check_textgen(config=textgen_config)
+        self.vizgen.generate_plot(
+            summary=summary, goal=goal, textgen_config=textgen_config, text_gen=self.text_gen)
+        

@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from lida.datamodel import Goal
+from ..datamodel import Goal
 
 
 # if len(plt.xticks()[0])) > 20 assuming plot is made with plt or
@@ -25,7 +25,7 @@ class ChartScaffold(object):
         if library == "matplotlib":
             instructions = {
                 "role": "assistant",
-                "content": f"  {matplotlib_instructions}. Use BaseMap for charts that require a map. "}
+                "content": f"  {matplotlib_instructions}. Use BaseMap for charts that require a map. use mplcursors library to add hover annotations for the data points. "}
             template = \
                 f"""
 import matplotlib.pyplot as plt

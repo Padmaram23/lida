@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.io as pio
 
-from lida.datamodel import ChartExecutorResponse, Summary
+from ..datamodel import ChartExecutorResponse, Summary
 
 
 def preprocess_code(code: str) -> str:
@@ -169,15 +169,8 @@ class ChartExecutor:
                         plt.savefig(buf, format="png", dpi=100, pad_inches=0.2)
                         buf.seek(0)
                         plot_data = base64.b64encode(buf.read()).decode("ascii")
-                        plt.close()
                     charts.append(
-                        ChartExecutorResponse(
-                            spec=None,
-                            status=True,
-                            raster=plot_data,
-                            code=code,
-                            library=library,
-                        )
+                        plt
                     )
                 except Exception as exception_error:
                     print(code_spec_copy[0])
@@ -249,13 +242,7 @@ class ChartExecutor:
                         plot_data = base64.b64encode(chart_bytes).decode('utf-8')
 
                         charts.append(
-                            ChartExecutorResponse(
-                                spec=None,
-                                status=True,
-                                raster=plot_data,
-                                code=code,
-                                library=library,
-                            )
+                            chart
                         )
                 except Exception as exception_error:
                     print(code)

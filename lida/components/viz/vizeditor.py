@@ -1,6 +1,6 @@
 from llmx import TextGenerator, TextGenerationConfig, TextGenerationResponse
 from ..scaffold import ChartScaffold
-from lida.datamodel import Goal, Summary
+from ...datamodel import Goal, Summary
 
 
 system_prompt = """
